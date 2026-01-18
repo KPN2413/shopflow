@@ -1,0 +1,12 @@
+﻿{
+  "name": "shopflow",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev:web": "pnpm --filter ./apps/web dev",
+    "dev:api": "pnpm --filter ./apps/api start:dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}
