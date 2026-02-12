@@ -50,4 +50,12 @@ export class UsersService {
     if (!user) throw new NotFoundException("User not found");
     return user;
   }
+
+  async findByEmailWithPassword(email: string) {
+  return this.usersRepo.findOne({
+    where: { email },
+    select: ["id", "email", "passwordHash", "isActive", "createdAt", "updatedAt"],
+  });
+}
+
 }

@@ -6,6 +6,7 @@ import { HealthService } from "./health/health.service";
 import { configuration } from "./config/configuration";
 import { RedisModule } from "./redis/redis.module";
 import { UsersModule } from "./users/users.module";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,8 +15,9 @@ import { UsersModule } from "./users/users.module";
       envFilePath: ".env",
       load: [configuration],
     }),
-    RedisModule,
+    RedisModule, 
     UsersModule,  
+    AuthModule,
 
 
     TypeOrmModule.forRootAsync({
