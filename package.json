@@ -1,12 +1,25 @@
-﻿{
+{
   "name": "shopflow",
   "private": true,
   "packageManager": "pnpm@9.15.4",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev:web": "pnpm --filter ./apps/web dev",
     "dev:api": "pnpm --filter ./apps/api start:dev",
     "lint": "pnpm -r lint",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "typeorm": "cross-env TS_NODE_PROJECT=apps/api/tsconfig.typeorm.json typeorm-ts-node-commonjs",
+    "migration:generate": "pnpm typeorm migration:generate -d apps/api/src/typeorm.datasource.ts apps/api/src/migrations/AutoMigration",
+    "migration:run": "pnpm typeorm migration:run -d apps/api/src/typeorm.datasource.ts",
+    "migration:revert": "pnpm typeorm migration:revert -d apps/api/src/typeorm.datasource.ts"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.28"
   }
 }
