@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import type Redis from "ioredis";
-import { REDIS_CLIENT } from "../redis/redis.module";
+import { REDIS_CLIENT } from "../redis/redis.constants";
 
 @Injectable()
 export class HealthService {

@@ -1,23 +1,23 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { UsersService } from "./users.service";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { UsersService } from './users.service';
 
-@Controller("users")
+@Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // Basic admin/dev endpoint (creates user with password hashing)
   @Post()
-  create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  create(@Body() dto: { email: string; password: string }) {
+    return this.usersService.createWithPassword(dto.email, dto.password);
   }
 
   @Get()
   findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAllSafe();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.usersService.findOne(id);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOneSafe(id);
   }
 }

@@ -1,61 +1,52 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import * as bcrypt from "bcrypt";
-import { User } from "./user.entity";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { ConflictException, Injectable } from '@nestjs/common';
+import * as argon2 from 'argon2';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity'; // adjust path
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly usersRepo: Repository<User>,
+    @InjectRepository(User) private readonly repo: Repository<User>,
   ) {}
 
-  async create(dto: CreateUserDto) {
-    const exists = await this.usersRepo.findOne({ where: { email: dto.email } });
-    if (exists) throw new ConflictException("Email already exists");
+  async findByEmailWithPassword(email: string) {
+    return this.repo.findOne({
+      where: { email },
+      select: ['id', 'email', 'passwordHash', 'isActive'], // ensure passwordHash is selectable
+    });
+  }
 
-    const passwordHash = await bcrypt.hash(dto.password, 10);
+  async createWithPassword(email: string, password: string) {
+    const exists = await this.repo.findOne({ where: { email } });
+    if (exists) throw new ConflictException('Email already registered');
 
-    const user = this.usersRepo.create({
-      email: dto.email,
+    const passwordHash = await argon2.hash(password, {
+      type: argon2.argon2id,
+      memoryCost: 19456,
+      timeCost: 2,
+      parallelism: 1,
+    });
+
+    const user = this.repo.create({
+      email,
       passwordHash,
       isActive: true,
     });
 
-    const saved = await this.usersRepo.save(user);
-
-    return {
-      id: saved.id,
-      email: saved.email,
-      isActive: saved.isActive,
-      createdAt: saved.createdAt,
-      updatedAt: saved.updatedAt,
-    };
+    return this.repo.save(user);
   }
 
-  async findAll() {
-    return this.usersRepo.find({
-      select: ["id", "email", "isActive", "createdAt", "updatedAt"],
-      order: { createdAt: "DESC" },
+  async findAllSafe() {
+    return this.repo.find({
+      select: ['id', 'email', 'isActive', 'createdAt', 'updatedAt'] as any,
     });
   }
 
-  async findOne(id: string) {
-    const user = await this.usersRepo.findOne({
-      where: { id },
-      select: ["id", "email", "isActive", "createdAt", "updatedAt"],
+  async findOneSafe(id: string) {
+    return this.repo.findOne({
+      where: { id } as any,
+      select: ['id', 'email', 'isActive', 'createdAt', 'updatedAt'] as any,
     });
-
-    if (!user) throw new NotFoundException("User not found");
-    return user;
   }
-
-  async findByEmailWithPassword(email: string) {
-  return this.usersRepo.findOne({
-    where: { email },
-    select: ["id", "email", "passwordHash", "isActive", "createdAt", "updatedAt"],
-  });
-}
-
 }

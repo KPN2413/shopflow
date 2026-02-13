@@ -1,12 +1,18 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { HealthController } from "./health/health.controller";
-import { HealthService } from "./health/health.service";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+
 import { configuration } from "./config/configuration";
 import { RedisModule } from "./redis/redis.module";
 import { UsersModule } from "./users/users.module";
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from "./auth/auth.module";
+
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { HealthController } from "./health/health.controller";
+import { HealthService } from "./health/health.service";
 
 @Module({
   imports: [
@@ -15,10 +21,6 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: ".env",
       load: [configuration],
     }),
-    RedisModule, 
-    UsersModule,  
-    AuthModule,
-
 
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -39,13 +41,32 @@ import { AuthModule } from './auth/auth.module';
           password: db.password,
           database: db.name,
           autoLoadEntities: true,
-          synchronize: false, // Step 5.3.3: make false + add migrations
+          synchronize: false,
         };
       },
     }),
+
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 100,
+      },
+    ]),
+
+    RedisModule,
+    UsersModule,
+    AuthModule,
   ],
-  controllers: [HealthController],
-  providers: [HealthService],
-  
+
+  controllers: [AppController, HealthController],
+
+  providers: [
+    AppService,
+    HealthService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
