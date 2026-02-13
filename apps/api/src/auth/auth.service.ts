@@ -8,7 +8,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RedisService } from '../redis/redis.service';
 
-type JwtPayload = { sub: string; email: string };
+type JwtPayload = { sub: string; email: string; role: 'CUSTOMER' | 'ADMIN' };
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
 
   async register(dto: RegisterDto) {
     const user = await this.usersService.createWithPassword(dto.email, dto.password);
-    const tokens = await this.issueTokens(String(user.id), user.email);
+    const tokens = await this.issueTokens(String(user.id), user.email, user.role);
     await this.storeRefreshHash(String(user.id), tokens.refreshToken);
     return tokens;
   }
@@ -37,7 +37,8 @@ export class AuthService {
     const ok = await argon2.verify(user.passwordHash, dto.password);
     if (!ok) throw new UnauthorizedException('Invalid credentials');
 
-    const tokens = await this.issueTokens(String(user.id), user.email);
+
+    const tokens = await this.issueTokens(String(user.id), user.email, user.role);
     await this.storeRefreshHash(String(user.id), tokens.refreshToken);
     return tokens;
   }
@@ -61,7 +62,7 @@ export class AuthService {
     const ok = await argon2.verify(storedHash, refreshToken);
     if (!ok) throw new UnauthorizedException('Invalid credentials');
 
-    const tokens = await this.issueTokens(userId, payload.email);
+    const tokens = await this.issueTokens(userId, payload.email, payload.role);
     await this.storeRefreshHash(userId, tokens.refreshToken);
     return tokens;
   }
@@ -71,8 +72,8 @@ export class AuthService {
     return { ok: true };
   }
 
-  private async issueTokens(userId: string, email: string) {
-    const payload: JwtPayload = { sub: userId, email };
+  private async issueTokens(userId: string, email: string, role: JwtPayload['role']) {
+    const payload: JwtPayload = { sub: userId, email, role };
 
     const accessToken = await this.jwt.signAsync(payload, {
       secret: this.config.getOrThrow<string>('JWT_ACCESS_SECRET'),

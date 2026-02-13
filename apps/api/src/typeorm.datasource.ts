@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import * as path from "path";
 import * as dotenv from "dotenv";
 
+
 // CommonJS-safe: __dirname exists here when using typeorm-ts-node-commonjs
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 

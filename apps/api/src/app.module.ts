@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
-
+import { AdminModule } from "./admin/admin.module";
 import { configuration } from "./config/configuration";
 import { RedisModule } from "./redis/redis.module";
 import { UsersModule } from "./users/users.module";
@@ -56,6 +56,7 @@ import { HealthService } from "./health/health.service";
     RedisModule,
     UsersModule,
     AuthModule,
+    AdminModule,
   ],
 
   controllers: [AppController, HealthController],

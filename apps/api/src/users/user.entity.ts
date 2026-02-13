@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Role } from '../auth/rbac/role.enum';
 
 @Entity({ name: "users" })
 export class User {
@@ -19,4 +20,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+    @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.CUSTOMER,
+  })
+  role: Role;
+
 }

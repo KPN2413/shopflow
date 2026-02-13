@@ -13,7 +13,7 @@ export class UsersService {
   async findByEmailWithPassword(email: string) {
     return this.repo.findOne({
       where: { email },
-      select: ['id', 'email', 'passwordHash', 'isActive'], // ensure passwordHash is selectable
+      select: ['id', 'email', 'passwordHash', 'isActive', 'role'], // ensure passwordHash is selectable
     });
   }
 
