@@ -1,3 +1,4 @@
+import { Category } from '../categories/category.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,7 +7,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+
 
 export enum ProductStatus {
   DRAFT = 'DRAFT',
@@ -22,6 +26,15 @@ export enum ProductVisibility {
 @Index('idx_products_status', ['status'])
 @Index('idx_products_visibility', ['visibility'])
 export class Product {
+  @Index('idx_products_category_id', ['categoryId'])
+  @Column({ type: 'uuid', nullable: true })
+  categoryId!: string | null;
+
+  @ManyToOne(() => Category, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'categoryId' })
+  category!: Category | null;
+
+
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
