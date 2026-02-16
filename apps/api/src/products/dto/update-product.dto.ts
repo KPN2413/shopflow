@@ -5,6 +5,7 @@ import {
   IsString,
   MaxLength,
   Min,
+  IsUUID,
 } from 'class-validator';
 import { ProductStatus, ProductVisibility } from '../product.entity';
 
@@ -40,4 +41,8 @@ export class UpdateProductDto {
   @IsOptional()
   @IsEnum(ProductVisibility)
   visibility?: ProductVisibility;
+
+  @IsOptional()
+@IsUUID()
+categoryId?: string | null;
 }

@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
 import { UpdateProductDto } from './dto/update-product.dto';
-
+import { Category } from '../categories/category.entity';
 import { Product } from './product.entity';
 import { ListProductsQueryDto } from './dto/list-products.query.dto';
 
@@ -11,6 +11,8 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productsRepo: Repository<Product>,
+    @InjectRepository(Category)
+    private readonly categoriesRepo: Repository<Category>,
   ) {}
 
   async ping(): Promise<{ ok: true }> {
@@ -106,6 +108,16 @@ async update(id: string, dto: UpdateProductDto): Promise<Product> {
   if (dto.description !== undefined) product.description = dto.description ?? null;
   if (dto.status !== undefined) product.status = dto.status;
   if (dto.visibility !== undefined) product.visibility = dto.visibility;
+if (dto.categoryId !== undefined) {
+  if (dto.categoryId === null) {
+    product.categoryId = null;
+  } else {
+    // verify category exists
+    const exists = await this.categoriesRepo.exist({ where: { id: dto.categoryId } });
+    if (!exists) throw new NotFoundException('Category not found');
+    product.categoryId = dto.categoryId;
+  }
+}
 
   try {
     return await this.productsRepo.save(product);
