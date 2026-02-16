@@ -40,5 +40,23 @@ export class CategoriesService {
     if (!found) throw new NotFoundException('Category not found');
     return found;
   }
+     async update(id: string, dto: import('./dto/update-category.dto').UpdateCategoryDto): Promise<Category> {
+    const existing = await this.getById(id);
+
+    const name = dto.name?.trim();
+    if (name) {
+      existing.name = name;
+      existing.slug = slugifyCategoryName(name);
+    }
+
+    try {
+      return await this.repo.save(existing);
+    } catch (e: any) {
+      if (e?.code === '23505') {
+        throw new ConflictException('Category name/slug already exists');
+      }
+      throw e;
+    }
+  }
 
 }
