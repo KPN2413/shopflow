@@ -31,4 +31,11 @@ export class CategoriesService {
       throw e;
     }
   }
+
+    async list(): Promise<Category[]> {
+    return this.repo.find({
+      order: { name: 'ASC' },
+    });
+  }
+
 }
