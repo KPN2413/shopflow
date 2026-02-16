@@ -13,7 +13,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { HealthController } from "./health/health.controller";
 import { HealthService } from "./health/health.service";
-
+import { CategoriesModule } from "./categories/categories.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -58,6 +58,7 @@ import { HealthService } from "./health/health.service";
     AuthModule,
     AdminModule,
     ProductsModule,
+    CategoriesModule,
   ],
 
   controllers: [AppController, HealthController],
