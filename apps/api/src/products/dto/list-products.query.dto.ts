@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProductStatus, ProductVisibility } from '../product.entity';
 
@@ -36,4 +36,8 @@ export class ListProductsQueryDto {
   @IsOptional()
   @IsString()
   order?: 'ASC' | 'DESC' = 'DESC';
+
+  @IsOptional()
+  @IsUUID()
+  categoryId?: string;
 }

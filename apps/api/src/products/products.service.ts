@@ -65,6 +65,9 @@ export class ProductsService {
       qb.andWhere('(LOWER(p.name) LIKE :q OR LOWER(p.slug) LIKE :q)', { q });
     }
 
+    if (query.categoryId) {
+  qb.andWhere('p.categoryId = :categoryId', { categoryId: query.categoryId });
+}
 
     
 
