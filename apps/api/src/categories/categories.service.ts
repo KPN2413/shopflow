@@ -58,5 +58,11 @@ export class CategoriesService {
       throw e;
     }
   }
+    async remove(id: string): Promise<{ ok: true }> {
+    const existing = await this.getById(id); // ensures 404
+    await this.repo.remove(existing);
+    return { ok: true };
+  }
+
 
 }
