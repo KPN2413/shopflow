@@ -4,8 +4,12 @@ import * as path from "path";
 import * as dotenv from "dotenv";
 
 
+const BASE_DIR = process.cwd();
+
+
+
 // CommonJS-safe: __dirname exists here when using typeorm-ts-node-commonjs
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(BASE_DIR, ".env") });
 
 function req(name: string): string {
   const v = process.env[name];
@@ -20,7 +24,7 @@ export default new DataSource({
   username: req("DB_USER"),
   password: req("DB_PASSWORD"),
   database: req("DB_NAME"),
-  entities: [path.join(__dirname, "/**/*.entity{.ts,.js}")],
-  migrations: [path.join(__dirname, "/migrations/*{.ts,.js}")],
+  entities: [path.join(BASE_DIR, "src/**/*.entity{.ts,.js}")],
+  migrations: [path.join(BASE_DIR, "src/migrations/*{.ts,.js}")],
   synchronize: false,
 });
