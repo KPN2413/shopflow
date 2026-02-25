@@ -1,14 +1,11 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import * as path from "path";
-import * as dotenv from "dotenv";
+import path from "path";
+import dotenv from "dotenv";
 
 
-const BASE_DIR = process.cwd();
-
-
-
-// CommonJS-safe: __dirname exists here when using typeorm-ts-node-commonjs
+// This file is in apps/api/src, so apps/api is one level up
+const BASE_DIR = path.join(process.cwd(), "apps", "api");
 dotenv.config({ path: path.resolve(BASE_DIR, ".env") });
 
 function req(name: string): string {
