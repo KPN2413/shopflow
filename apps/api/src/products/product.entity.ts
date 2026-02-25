@@ -3,6 +3,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  Check,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
@@ -25,6 +26,7 @@ export enum ProductVisibility {
 @Entity({ name: 'products' })
 @Index('idx_products_status', ['status'])
 @Index('idx_products_visibility', ['visibility'])
+@Check(`"stock_qty" >= 0`)
 export class Product {
   @Index('idx_products_category_id', ['categoryId'])
   @Column({ type: 'uuid', nullable: true })
@@ -38,6 +40,8 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ name: "stock_qty", type: "int", default: 0 })
+  stockQty!: number;
   // Display name shown to users
   @Column({ type: 'varchar', length: 200 })
   name!: string;
