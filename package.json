@@ -20,6 +20,7 @@
     "dotenv": "^17.2.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typeorm": "^0.3.28"
+    "typeorm": "^0.3.28",
+    "typeorm-ts-node-esm": "^0.3.20"
   }
 }

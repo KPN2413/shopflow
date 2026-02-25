@@ -23,6 +23,9 @@ importers:
       typeorm:
         specifier: ^0.3.28
         version: 0.3.28(ioredis@5.9.2)(pg@8.18.0)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3))
+      typeorm-ts-node-esm:
+        specifier: ^0.3.20
+        version: 0.3.20
 
   apps/api:
     dependencies:
@@ -4000,6 +4003,10 @@ packages:
 
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
+
+  typeorm-ts-node-esm@0.3.20:
+    resolution: {integrity: sha512-eBWfzgr8zMbxKnA5iGsLQzrVXeV3H4thvA/n+Vx17hATk960e63NTO6Xgae99QNNJjpormAOJuh2Hl0e9lnzcA==}
+    hasBin: true
 
   typeorm@0.3.28:
     resolution: {integrity: sha512-6GH7wXhtfq2D33ZuRXYwIsl/qM5685WZcODZb7noOOcRMteM9KF2x2ap3H0EBjnSV0VO4gNAfJT5Ukp0PkOlvg==}
@@ -8665,6 +8672,8 @@ snapshots:
       reflect.getprototypeof: 1.0.10
 
   typedarray@0.0.6: {}
+
+  typeorm-ts-node-esm@0.3.20: {}
 
   typeorm@0.3.28(ioredis@5.9.2)(pg@8.18.0)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3)):
     dependencies:
